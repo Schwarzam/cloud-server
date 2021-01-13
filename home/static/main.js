@@ -16,7 +16,8 @@ picker.addEventListener('change', e => {
             sendFile(file, file.name);
         }else{
             sendFile(file, file.webkitRelativePath);
-        }   
+        }
+        location.reload();   
     }
 });
 
@@ -28,7 +29,8 @@ pickerfolder.addEventListener('change', e => {
             sendFile(file, file.name);
         }else{
             sendFile(file, file.webkitRelativePath);
-        }   
+        }
+        location.reload();   
     }
 });
 
