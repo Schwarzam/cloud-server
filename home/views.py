@@ -45,21 +45,6 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-class NamedMemoryFileUploadHandler(MemoryFileUploadHandler):
-    def file_complete(self, file_size):
-        in_memory_file = super().file_complete(file_size)
-        if in_memory_file is None:
-            return
-        return in_memory_file, self.file_name
-
-
-class NamedTemporaryFileUploadHandler(TemporaryFileUploadHandler):
-    def file_complete(self, file_size):
-        temporary_file = super().file_complete(file_size)
-        if temporary_file is None:
-            return
-        return temporary_file, self.file_name
-
 @csrf_exempt
 @api_view(['POST'])
 def simple_upload(request):
@@ -74,32 +59,50 @@ def simple_upload(request):
 
     return HttpResponse('failed')
 
-def zipfolder(target_dir, foldername):            
+
+def zipfolder(target_dir, foldername): 
+    x = target_dir.split('/')
+    lenght = len(x)
+    concat = ''
+
+    for obj in range(len(x) - 1):
+        concat = concat + x[obj]
+
     zipobj = ZipFile(foldername, 'w', ZIP_DEFLATED)
     rootlen = len(target_dir) + 1
 
     direcs = []
     filesec = []
-    lenmypath = len(target_dir)
+    lenmypath = len(concat) + lenght - 1
     
     for root, dirs, files in os.walk(target_dir):
         for f in files:
             filesec.append(os.path.join(root, f)[lenmypath:])
-
+            print(os.path.join(root, f)[lenmypath:])
             zipobj.write(os.path.join(root, f), os.path.join(root, f)[lenmypath:])
 
 
-def get_file(request):
-    print(request.GET)
 
+def get_file(request):
     file_name = request.GET['filepath']
     path_to_file = settings.MEDIA_ROOT + '/' + file_name
 
-    if os.path.isdir(path_to_file):
-        zipfolder(settings.MEDIA_ROOT + '/dalserver-v0.5' ,settings.MEDIA_ROOT + '/zipped' + f'/{file_name}.zip', )
+    x = file_name.split('/')
+    lenght = len(x)
+    concat = ''
+    for obj in range(len(x) - 1):
+        concat = concat + x[obj]
+    rootlen = len(file_name) + 1
+    lenmypath = len(concat) + lenght - 1
+    file_name = file_name[lenmypath:]
 
-        print(settings.MEDIA_ROOT + f'/{file_name}.zip')
-        return redirect(f'/media/zipped{file_name}.zip')
+    print(settings.MEDIA_ROOT + '/zipped' + f'{file_name}.zip')
+
+    if os.path.isdir(path_to_file):
+        zipfolder(path_to_file ,settings.MEDIA_ROOT + '/zipped' + f'/{file_name}.zip', )
+
+        print(settings.MEDIA_ROOT + f'{file_name}.zip')
+        return redirect(f'/media/zipped/{file_name}.zip')
 
     if os.path.isfile(path_to_file):
         return redirect(f'/media/{file_name}')
