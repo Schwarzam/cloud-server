@@ -23,7 +23,7 @@ import os
 SECRET_KEY = '*=9bu=68wduxcgenr#mpkrk*czuzl6rfok#=vu&=jstk!83ut$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -123,8 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 
-MEDIA_ROOT = '/Users/oliveira/Documents/cloud-server/media'
+MEDIA_ROOT = '/mnt/ntfs/cloud-server/media'
 # MEDIA_ROOT = '/home/gustavo/Documents/cloud-server/media'
 MEDIA_URL = 'media/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'

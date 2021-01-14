@@ -1,0 +1,6 @@
+cloud-server.sock
+
+venv/
+/venv
+
+.DS_store
