@@ -30,14 +30,14 @@ let csrftoken = getCookie('csrftoken');
 picker.addEventListener('change', e => {
     loader.style.display = 'inline'
     for (var i = 0; i < picker.files.length; i++) {
-
         var file = picker.files[i];
+
+
         if (file.webkitRelativePath.length <= 1){
             sendFile(file, file.name);
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        
     }
     setTimeout(function() {
             loader.style.display = 'none'
@@ -49,13 +49,16 @@ pickerfolder.addEventListener('change', e => {
     loader.style.display = 'inline'
     for (var i = 0; i < pickerfolder.files.length; i++) {
         var file = pickerfolder.files[i];
+
         if (file.webkitRelativePath.length <= 1){
             setTimeout(function() {
-                sendFile(file, file.name);
             }, 300);
+
+            sendFile(file, file.name);
         }else{
+            sendFile(file, file.webkitRelativePath);  
+
             setTimeout(function() {
-                sendFile(file, file.webkitRelativePath);  
             }, 300);
         }       
     }
