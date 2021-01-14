@@ -11,9 +11,10 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadhandler import MemoryFileUploadHandler, TemporaryFileUploadHandler
 from django.views.decorators.csrf import csrf_exempt 
 from rest_framework.decorators import api_view
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required
 def home(request):
     mypath = settings.MEDIA_ROOT
 
@@ -85,7 +86,11 @@ def zipfolder(target_dir, foldername):
 
 def get_file(request):
     file_name = request.GET['filepath']
+
     path_to_file = settings.MEDIA_ROOT + '/' + file_name
+
+    if os.path.isfile(path_to_file):
+        return redirect(f'/media{file_name}')
 
     x = file_name.split('/')
     lenght = len(x)

@@ -18,11 +18,15 @@ from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
 from home.views import home, get_file, simple_upload
+from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home),
     path('download/', get_file),
-    path('upload/', simple_upload)
+    path('upload/', simple_upload),
+
+
+    path('accounts/', include('django.contrib.auth.urls')),
 
 ] +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

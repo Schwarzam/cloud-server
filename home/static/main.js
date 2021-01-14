@@ -8,6 +8,24 @@ let loader = document.getElementById("loader");
 let counter = 1;
 let total = 0;
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+let csrftoken = getCookie('csrftoken');
+// const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
 // On button input change (picker), process it
 picker.addEventListener('change', e => {
     for (var i = 0; i < picker.files.length; i++) {
@@ -17,7 +35,7 @@ picker.addEventListener('change', e => {
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        location.reload();   
+        // location.reload();   
     }
 });
 
@@ -30,7 +48,7 @@ pickerfolder.addEventListener('change', e => {
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        location.reload();   
+        // location.reload();   
     }
 });
 
@@ -47,6 +65,7 @@ sendFile = function(file, path) {
 
     // Do request
     request.open("POST", 'upload/');
-    request.send(formData);
 
+    request.setRequestHeader("X-CSRFToken", csrftoken);
+    request.send(formData);
 };
