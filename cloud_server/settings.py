@@ -124,7 +124,7 @@ USE_TZ = True
 
 
 MEDIA_ROOT = '/Users/oliveira/Documents/cloud-server/media'
-MEDIA_ROOT = '/home/gustavo/Documents/cloud-server/media'
+# MEDIA_ROOT = '/home/gustavo/Documents/cloud-server/media'
 MEDIA_URL = 'media/'
 
 STATIC_URL = '/static/'

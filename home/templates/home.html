@@ -7,79 +7,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 	<title>Desk Drive</title>
-
-
-	<style type="text/css">
-		body{
-			width: 100%;
-		}
-		.header{
-			padding: 30px;
-			text-align: center;
-			height: 80px;
-		}
-		.image{
-			margin: 10px;
-		}
-		.text{
-			margin-top: 10px;
-		}
-		.files{
-			height: 50px;
-			display: flex;
-			width: 300px;
-			margin: auto;
-		}
-		.bi{
-			margin: auto auto auto 30px;
-		}
-		.picker{
-			position: absolute;
-			top: 10px;
-			left: 90%;
-			display: grid;
-			text-align: center;
-		}
-		.upload{
-			margin: 50px auto auto auto;
-			text-align: center;
-		}
-		.styled-table {
-		    border-collapse: collapse;
-		    margin: auto;
-		    font-size: 0.9em;
-		    font-family: sans-serif;
-		    min-width: 400px;
-		    width: 90%;
-		    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-		}
-		.styled-table thead tr {
-		    background-color: #F5BA79;
-		    color: #111;
-		    text-align: left;
-		}
-		.styled-table th,
-		.styled-table td {
-		    padding: 8px 10px;
-		}
-		.styled-table tbody tr {
-		    border-bottom: 1px solid #dddddd;
-		}
-
-		.styled-table tbody tr:nth-of-type(even) {
-		    background-color: #f3f3f3;
-		}
-
-		.styled-table tbody tr:last-of-type {
-		    border-bottom: 2px solid #009879;
-		}
-		input[type='file'] {
-			display: none;
-		}
-	</style>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 
 <body>
+	<div class="loader" id="loader"></div>
 	<h2 class="header">Developer Desk Drive</h2>
 
 	<table class="styled-table">
@@ -114,9 +46,11 @@
 					</a>
 				</td>
 				<td>
-					<a onclick="delete_file(this.value)" value="/delete?filepath={{current}}/{{folder}}"><img src="{% static 'trash.png' %}" width="20px" alt=""></a>
+					<a onclick="delete_file(this)" class="trash">
+						<p style="display: none;">/delete?filepath={{current}}/{{dir}}</p>
+						<img src="{% static 'trash.png' %}" width="20px" alt="">
+					</a>
 				</td>
-
 	        </tr>
 	        {% endfor %}
 
@@ -126,7 +60,12 @@
 
 	        <tr>
 	            <td></td>
-	            <td><p class="text">{{file}}</p></td>
+	            {% if '.png' in file or '.jpg' in file or '.jpeg' in file or '.mp4' in file %}
+	            	<td><a href="/download?filepath={{current}}/{{file}}"><p class="text">{{file}}</p></td></a>
+	            {% else %}
+	            	<td><p class="text">{{file}}</p></td>
+	            {% endif %}
+	            
 	            <td>
 	            	<a href="/download?filepath={{current}}/{{file}}" download>
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
@@ -136,12 +75,14 @@
 					</a>
 				</td>
 				<td>
-					<a onclick="delete_file(this.value)" value="/delete?filepath={{current}}/{{file}}"><img src="{% static 'trash.png' %}" width="20px" alt=""></a>
+					<a onclick="delete_file(this)" class="trash">
+						<p style="display: none;">/delete?filepath={{current}}/{{file}}</p>
+						<img src="{% static 'trash.png' %}" width="20px" alt="">
+					</a>
+
 				</td>
 	        </tr>
-
 	        {% endfor %}
-
 	    </tbody>
 	</table>
 

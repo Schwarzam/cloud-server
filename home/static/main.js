@@ -29,6 +29,7 @@ let csrftoken = getCookie('csrftoken');
 // On button input change (picker), process it
 picker.addEventListener('change', e => {
     for (var i = 0; i < picker.files.length; i++) {
+
         var file = picker.files[i];
         if (file.webkitRelativePath.length <= 1){
             sendFile(file, file.name);
@@ -40,8 +41,8 @@ picker.addEventListener('change', e => {
 });
 
 pickerfolder.addEventListener('change', e => {
-    console.log(pickerfolder)
     for (var i = 0; i < pickerfolder.files.length; i++) {
+        
         var file = pickerfolder.files[i];
         if (file.webkitRelativePath.length <= 1){
             sendFile(file, file.name);
@@ -71,6 +72,18 @@ sendFile = function(file, path) {
 };
 
 
-function delete_file(value) {
-    console.log(value)
+function delete_file(element) {
+    const url = element.querySelector("p").innerHTML;
+
+    if (confirm("Press a button!")) {
+        var request = new XMLHttpRequest();
+        request.open("GET", url);
+        request.send()
+
+        setTimeout(function() {
+            location.reload()
+        }, 40);
+    } else {
+        
+    }
 }

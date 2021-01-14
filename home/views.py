@@ -125,6 +125,6 @@ def get_file(request):
 def delete_file(request):
     file_name = request.GET['filepath']
     path_to_file = settings.MEDIA_ROOT + '/' + file_name
-    os.system(f'rm {path_to_file}')
+    os.system(f'rm -r {path_to_file}')
 
     return Response('success')

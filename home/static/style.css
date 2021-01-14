@@ -1,0 +1,82 @@
+body{
+	width: 100%;
+}
+.header{
+	padding: 30px;
+	text-align: center;
+	height: 80px;
+}
+.image{
+	margin: 10px;
+}
+.text{
+	margin-top: 10px;
+}
+.files{
+	height: 50px;
+	display: flex;
+	width: 300px;
+	margin: auto;
+}
+.bi{
+	margin: auto auto auto 30px;
+}
+.picker{
+	position: absolute;
+	top: 10px;
+	left: 90%;
+	display: grid;
+	text-align: center;
+}
+.upload{
+	margin: 50px auto auto auto;
+	text-align: center;
+}
+.styled-table {
+    border-collapse: collapse;
+    margin: auto auto 70px auto;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    width: 90%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #F5BA79;
+    color: #111;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 8px 10px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+input[type='file'] {
+	display: none;
+}
+.trash{
+	cursor: pointer;
+}
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
