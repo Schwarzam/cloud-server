@@ -63,12 +63,19 @@ pickerfolder.addEventListener('change', e => {
 
 // Function to send a file, call PHP backend 
 sendFile = function(file, path) {
+    var local = String(document.getElementById("curr").textContent);
 
-    var item = document.createElement('li');
+    var string = '';
+    for (var i = 0; i < local.length; i++){
+        string += local.substring(i,i+1)
+    }
+
+
     var formData = new FormData();
     var request = new XMLHttpRequest();
 
     // Set post variables 
+    formData.append('local', string); // String of local file's path
     formData.append('path', path); // String of local file's path 
     formData.append('file', file); // One object file
 
@@ -83,7 +90,7 @@ sendFile = function(file, path) {
 function delete_file(element) {
     const url = element.querySelector("p").innerHTML;
 
-    if (confirm("Press a button!")) {
+    if (confirm("Delete?")) {
         var request = new XMLHttpRequest();
         request.open("GET", url);
         request.send()

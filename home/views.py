@@ -54,12 +54,17 @@ def home(request):
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def simple_upload(request):
-    print(request.data)
 
     if request.method == 'POST':
         myfile = request.data
         fs = FileSystemStorage()
-        filename = fs.save(myfile['path'], myfile['file'])
+
+        if len(myfile['local']) > 1:
+            local = f"{myfile['local'][1:]}/{myfile['path']}"
+        else:
+            local = myfile['path']
+
+        filename = fs.save(local, myfile['file'])
         
         return HttpResponse('success')
 
@@ -83,7 +88,6 @@ def zipfolder(target_dir, foldername):
     for root, dirs, files in os.walk(target_dir):
         for f in files:
             filesec.append(os.path.join(root, f)[lenmypath:])
-            print(os.path.join(root, f)[lenmypath:])
             zipobj.write(os.path.join(root, f), os.path.join(root, f)[lenmypath:])
 
 
@@ -107,12 +111,8 @@ def get_file(request):
     lenmypath = len(concat) + lenght - 1
     file_name = file_name[lenmypath:]
 
-    print(settings.MEDIA_ROOT + '/zipped' + f'{file_name}.zip')
-
     if os.path.isdir(path_to_file):
         zipfolder(path_to_file ,settings.MEDIA_ROOT + '/zipped' + f'/{file_name}.zip', )
-
-        print(settings.MEDIA_ROOT + f'{file_name}.zip')
         return redirect(f'/media/zipped/{file_name}.zip')
 
     if os.path.isfile(path_to_file):
