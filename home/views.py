@@ -15,6 +15,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from django.contrib.auth.decorators import login_required
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+import shutil
 # Create your views here.
 
 @login_required
@@ -57,6 +58,7 @@ def simple_upload(request):
 
     if request.method == 'POST':
         myfile = request.data
+        print(myfile)
         fs = FileSystemStorage()
 
         if len(myfile['local']) > 1:
@@ -118,13 +120,18 @@ def get_file(request):
     if os.path.isfile(path_to_file):
         return redirect(f'/media/{file_name}')
 
-
+@csrf_exempt
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def delete_file(request):
     file_name = request.GET['filepath']
     path_to_file = settings.MEDIA_ROOT + '/' + file_name
-    os.system(f'rm -r {path_to_file}')
+
+    if os.path.isfile(path_to_file):
+        os.remove(path_to_file)
+
+    if os.path.isdir(path_to_file):
+        shutil.rmtree(path_to_file)
 
     return Response('success')

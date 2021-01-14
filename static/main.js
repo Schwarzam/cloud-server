@@ -37,28 +37,32 @@ picker.addEventListener('change', e => {
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        setTimeout(function() {
+        
+    }
+    setTimeout(function() {
             loader.style.display = 'none'
             location.reload();   
-        }, 50); 
-    }
+        }, 300); 
 });
 
 pickerfolder.addEventListener('change', e => {
     loader.style.display = 'inline'
     for (var i = 0; i < pickerfolder.files.length; i++) {
-        
         var file = pickerfolder.files[i];
         if (file.webkitRelativePath.length <= 1){
-            sendFile(file, file.name);
+            setTimeout(function() {
+                sendFile(file, file.name);
+            }, 300);
         }else{
-            sendFile(file, file.webkitRelativePath);
-        }
-        setTimeout(function() {
+            setTimeout(function() {
+                sendFile(file, file.webkitRelativePath);  
+            }, 300);
+        }       
+    }
+    setTimeout(function() {
             loader.style.display = 'none'
             location.reload();   
-        }, 50);
-    }
+    }, 300);
 });
 
 // Function to send a file, call PHP backend 
@@ -88,6 +92,7 @@ sendFile = function(file, path) {
 
 
 function delete_file(element) {
+    loader.style.display = 'inline'
     const url = element.querySelector("p").innerHTML;
 
     if (confirm("Delete?")) {
@@ -97,7 +102,8 @@ function delete_file(element) {
 
         setTimeout(function() {
             location.reload()
-        }, 40);
+            loader.style.display = 'none'
+        }, 300);
     } else {
         
     }
