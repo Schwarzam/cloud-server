@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from os import walk
 from django.http import HttpResponse
+from rest_framework.response import Response
 from django.utils.encoding import force_text, smart_str
 from zipfile import ZipFile, ZIP_DEFLATED
 import os
@@ -10,8 +11,10 @@ from django.shortcuts import redirect
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadhandler import MemoryFileUploadHandler, TemporaryFileUploadHandler
 from django.views.decorators.csrf import csrf_exempt 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.contrib.auth.decorators import login_required
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 @login_required
@@ -48,6 +51,8 @@ def home(request):
 
 @csrf_exempt
 @api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def simple_upload(request):
     print(request.data)
 
@@ -59,7 +64,6 @@ def simple_upload(request):
         return HttpResponse('success')
 
     return HttpResponse('failed')
-
 
 def zipfolder(target_dir, foldername): 
     x = target_dir.split('/')
@@ -83,7 +87,9 @@ def zipfolder(target_dir, foldername):
             zipobj.write(os.path.join(root, f), os.path.join(root, f)[lenmypath:])
 
 
-
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def get_file(request):
     file_name = request.GET['filepath']
 
@@ -111,3 +117,14 @@ def get_file(request):
 
     if os.path.isfile(path_to_file):
         return redirect(f'/media/{file_name}')
+
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_file(request):
+    file_name = request.GET['filepath']
+    path_to_file = settings.MEDIA_ROOT + '/' + file_name
+    os.system(f'rm {path_to_file}')
+
+    return Response('success')

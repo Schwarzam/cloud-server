@@ -69,3 +69,8 @@ sendFile = function(file, path) {
     request.setRequestHeader("X-CSRFToken", csrftoken);
     request.send(formData);
 };
+
+
+function delete_file(value) {
+    console.log(value)
+}
