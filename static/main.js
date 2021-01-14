@@ -28,6 +28,7 @@ let csrftoken = getCookie('csrftoken');
 
 // On button input change (picker), process it
 picker.addEventListener('change', e => {
+    loader.style.display = 'inline'
     for (var i = 0; i < picker.files.length; i++) {
 
         var file = picker.files[i];
@@ -36,11 +37,15 @@ picker.addEventListener('change', e => {
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        // location.reload();   
+        setTimeout(function() {
+            loader.style.display = 'none'
+            location.reload();   
+        }, 50); 
     }
 });
 
 pickerfolder.addEventListener('change', e => {
+    loader.style.display = 'inline'
     for (var i = 0; i < pickerfolder.files.length; i++) {
         
         var file = pickerfolder.files[i];
@@ -49,7 +54,10 @@ pickerfolder.addEventListener('change', e => {
         }else{
             sendFile(file, file.webkitRelativePath);
         }
-        // location.reload();   
+        setTimeout(function() {
+            loader.style.display = 'none'
+            location.reload();   
+        }, 50);
     }
 });
 
