@@ -32,7 +32,6 @@ picker.addEventListener('change', e => {
     for (var i = 0; i < picker.files.length; i++) {
         var file = picker.files[i];
 
-
         if (file.webkitRelativePath.length <= 1){
             sendFile(file, file.name);
         }else{
@@ -93,7 +92,6 @@ function reqListener () {
 
     setTimeout(function() {
         loader.style.display = 'none'
-        location.reload()
     }, 1500);
 };
 
