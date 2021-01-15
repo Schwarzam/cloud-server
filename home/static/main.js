@@ -56,13 +56,13 @@ pickerfolder.addEventListener('input', e => {
             formData.append(`file${filenum}`, file)
         }
         filenum ++
-        if (i % 25 === 0){
+        if (i % 15 === 0){
             make_req(formData, local);
             formData = new FormData();
             filenum = 0;
         }
     }
-    if (i % 25 !== 0){
+    if (i % 15 !== 0){
         make_req(formData, local);
         formData = new FormData();
     }
