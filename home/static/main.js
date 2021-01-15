@@ -41,37 +41,70 @@ picker.addEventListener('change', e => {
     }
     setTimeout(function() {
             loader.style.display = 'none'
-            location.reload();   
-        }, 300); 
+            location.reload(); 
+        }, 1000); 
 });
 
-pickerfolder.addEventListener('change', e => {
+var formData = new FormData();
+pickerfolder.addEventListener('input', e => {
     loader.style.display = 'inline'
+    var local = String(document.getElementById("curr").textContent);
+    var filenum = 0;
+
     for (var i = 0; i < pickerfolder.files.length; i++) {
         var file = pickerfolder.files[i];
-
         if (file.webkitRelativePath.length <= 1){
-            setTimeout(function() {
-            }, 300);
-
-            sendFile(file, file.name);
+            formData.append(`path${filenum}`, file.name)
+            formData.append(`file${filenum}`, file)  
         }else{
-            sendFile(file, file.webkitRelativePath);  
-
-            setTimeout(function() {
-            }, 300);
-        }       
+            formData.append(`path${filenum}`, file.webkitRelativePath)
+            formData.append(`file${filenum}`, file)
+        }
+        filenum ++
+        if (i % 50 === 0){
+            make_req(formData, local);
+            formData = new FormData();
+            filenum = 0;
+        }
     }
+    if (i % 50 !== 0){
+        make_req(formData, local);
+        formData = new FormData();
+    }
+
+
     setTimeout(function() {
-            loader.style.display = 'none'
-            location.reload();   
-    }, 300);
+        loader.style.display = 'none'
+        location.realod()
+    }, pickerfolder.files.length * 20);
 });
 
-// Function to send a file, call PHP backend 
-sendFile = function(file, path) {
-    var local = String(document.getElementById("curr").textContent);
+function make_req(formData, local){
+    var request = new XMLHttpRequest();
 
+    var string = '';
+    for (var i = 0; i < local.length; i++){
+        string += local.substring(i,i+1)
+    }
+
+    formData.append('local', string)
+
+    var i
+    for (var key of formData.entries()) {
+        i++
+    } console.log(i)          
+
+    request.open("POST", 'multiple_upload/');
+    request.setRequestHeader("X-CSRFToken", csrftoken);
+
+    setTimeout(function() {
+            request.send(formData);
+    }, 3000);
+    
+}
+
+// Function to send a file, call PHP backend 
+function sendFile(file, path) {
     var string = '';
     for (var i = 0; i < local.length; i++){
         string += local.substring(i,i+1)
@@ -90,6 +123,8 @@ sendFile = function(file, path) {
     request.open("POST", 'upload/');
 
     request.setRequestHeader("X-CSRFToken", csrftoken);
+    console.log('send')
+
     request.send(formData);
 };
 
@@ -111,3 +146,45 @@ function delete_file(element) {
         
     }
 }
+
+
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open(cacheName).then(function(cache) {
+      return setOfCachedUrls(cache).then(async function(cachedUrls) {
+        const cacheKeys = Array.from(urlsToCacheKeys.values());
+        const chunckSize = 20;
+        const cacheKeysChunks = new Array(Math.ceil(cacheKeys.length / chunckSize)).fill().map(_ => {
+          return cacheKeys.splice(0, chunckSize);
+        });
+        for (let cacheKeys of cacheKeysChunks) {
+          await Promise.all(
+            cacheKeys.map(function(cacheKey) {
+              // If we don't have a key matching url in the cache already, add it.
+              if (!cachedUrls.has(cacheKey)) {
+                var request = new Request(cacheKey, {credentials: 'same-origin'});
+                return fetch(request).then(function(response) {
+                  // Bail out of installation unless we get back a 200 OK for
+                  // every request.
+                  if (!response.ok) {
+                    throw new Error('Request for ' + cacheKey + ' returned a ' +
+                      'response with status ' + response.status);
+                  }
+
+                  return cleanResponse(response).then(function(responseToCache) {
+                    return cache.put(cacheKey, responseToCache);
+                  });
+                });
+              }
+            })
+          );
+        }
+      });
+    }).then(function() {
+
+      // Force the SW to transition from installing -> active state
+      return self.skipWaiting();
+
+    })
+  );
+});

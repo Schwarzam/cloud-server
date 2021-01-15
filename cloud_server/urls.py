@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
-from home.views import home, get_file, simple_upload, delete_file
+from home.views import home, get_file, simple_upload, delete_file, multiple_upload
 from django.conf.urls import include
 
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('', home),
     path('download/', get_file),
     path('upload/', simple_upload),
+    path('multiple_upload/', multiple_upload),
 
     path('delete/', delete_file),
     path('accounts/', include('django.contrib.auth.urls')),

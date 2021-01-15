@@ -54,6 +54,40 @@ def home(request):
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
+def multiple_upload(request):
+    if request.method == 'POST':
+        data = request.data
+
+        counter = 0
+        for key in data.keys():
+            if 'path' in key:
+                counter = counter + 1;
+
+        for i in range(counter):
+            myfile = {}
+
+            myfile['local'] = data['local']
+            myfile['path'] = data[f'path{i}']
+            myfile['file'] = data[f'file{i}']
+
+            fs = FileSystemStorage()
+
+            if len(myfile['local']) > 1:
+                local = f"{myfile['local'][1:]}/{myfile['path']}"
+            else:
+                local = myfile['path']
+
+            print(local)
+            filename = fs.save(local, myfile['file'])
+            
+        return HttpResponse('success')
+
+    return HttpResponse('failed')
+
+@csrf_exempt
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def simple_upload(request):
 
     if request.method == 'POST':
@@ -71,6 +105,7 @@ def simple_upload(request):
         return HttpResponse('success')
 
     return HttpResponse('failed')
+
 
 def zipfolder(target_dir, foldername): 
     x = target_dir.split('/')
@@ -119,6 +154,8 @@ def get_file(request):
 
     if os.path.isfile(path_to_file):
         return redirect(f'/media/{file_name}')
+
+
 
 @csrf_exempt
 @api_view(['GET'])

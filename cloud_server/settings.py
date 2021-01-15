@@ -124,7 +124,7 @@ USE_TZ = True
 
 
 MEDIA_ROOT = '/mnt/ntfs/cloud-server/media'
-# MEDIA_ROOT = '/home/gustavo/Documents/cloud-server/media'
+# MEDIA_ROOT = '/Users/oliveira/Documents/cloud-server/media'
 MEDIA_URL = 'media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
