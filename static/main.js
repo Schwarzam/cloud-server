@@ -39,6 +39,7 @@ picker.addEventListener('change', e => {
         }
     }
 });
+var number_requests = 0;
 
 var formData = new FormData();
 pickerfolder.addEventListener('input', e => {
@@ -56,13 +57,14 @@ pickerfolder.addEventListener('input', e => {
             formData.append(`file${filenum}`, file)
         }
         filenum ++
-        if (i % 15 === 0){
+        if (i % 20 === 0){
             make_req(formData, local);
             formData = new FormData();
             filenum = 0;
+            number_requests ++
         }
     }
-    if (i % 15 !== 0){
+    if (i % 20 !== 0){
         make_req(formData, local);
         formData = new FormData();
     }
@@ -88,11 +90,18 @@ function make_req(formData, local){
 }
 
 function reqListener () {
-    console.log(this)
+    console.log(number_requests)
+    number_requests = number_requests - 1;
+    if (number_requests < 1){
+        number_requests = 0;
+    }
 
-    setTimeout(function() {
+    if (number_requests === 0){
+        setTimeout(function() {
         loader.style.display = 'none'
+        location.reload()
     }, 1500);
+    }
 };
 
 // Function to send a file, call PHP backend 

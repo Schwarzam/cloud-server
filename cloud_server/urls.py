@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path
 from django.conf.urls.static import static
-from home.views import home, get_file, simple_upload, delete_file, multiple_upload
-from django.conf.urls import include
+from home.views import home, get_file, simple_upload, delete_file, multiple_upload, media_access
+from django.conf.urls import include, url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path('delete/', delete_file),
     path('accounts/', include('django.contrib.auth.urls')),
 
-] +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^media/(?P<path>.*)', media_access, name='media'),
+]

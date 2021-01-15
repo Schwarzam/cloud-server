@@ -155,8 +155,6 @@ def get_file(request):
     if os.path.isfile(path_to_file):
         return redirect(f'/media/{file_name}')
 
-
-
 @csrf_exempt
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -172,3 +170,12 @@ def delete_file(request):
         shutil.rmtree(path_to_file)
 
     return Response('success')
+
+@login_required
+def media_access(request, path):
+    response = HttpResponse()
+        # Content-type will be detected by nginx
+    del response['Content-Type']
+    response['X-Accel-Redirect'] = '/protected/media/' + path
+
+    return response
