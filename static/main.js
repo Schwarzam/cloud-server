@@ -39,10 +39,6 @@ picker.addEventListener('change', e => {
             sendFile(file, file.webkitRelativePath);
         }
     }
-    setTimeout(function() {
-            loader.style.display = 'none'
-            location.reload(); 
-        }, 1000); 
 });
 
 var formData = new FormData();
@@ -71,12 +67,6 @@ pickerfolder.addEventListener('input', e => {
         make_req(formData, local);
         formData = new FormData();
     }
-
-
-    setTimeout(function() {
-        loader.style.display = 'none'
-        location.realod()
-    }, pickerfolder.files.length * 20);
 });
 
 function make_req(formData, local){
@@ -87,21 +77,25 @@ function make_req(formData, local){
         string += local.substring(i,i+1)
     }
 
-    formData.append('local', string)
-
-    var i
-    for (var key of formData.entries()) {
-        i++
-    } console.log(i)          
+    formData.append('local', string)     
 
     request.open("POST", 'multiple_upload/');
     request.setRequestHeader("X-CSRFToken", csrftoken);
 
     setTimeout(function() {
             request.send(formData);
-    }, 3000);
-    
+    }, 1000);
+    request.onload = reqListener;
 }
+
+function reqListener () {
+    console.log(this)
+
+    setTimeout(function() {
+        loader.style.display = 'none'
+        location.reload()
+    }, 1500);
+};
 
 // Function to send a file, call PHP backend 
 function sendFile(file, path) {
@@ -126,6 +120,8 @@ function sendFile(file, path) {
     console.log('send')
 
     request.send(formData);
+
+    request.onload = reqListener;
 };
 
 
@@ -138,10 +134,7 @@ function delete_file(element) {
         request.open("GET", url);
         request.send()
 
-        setTimeout(function() {
-            location.reload()
-            loader.style.display = 'none'
-        }, 300);
+        request.onload = reqListener;
     } else {
         
     }
