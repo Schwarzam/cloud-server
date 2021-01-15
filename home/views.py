@@ -173,9 +173,9 @@ def delete_file(request):
 
 @login_required
 def media_access(request, path):
-    print(path)
-    response = HttpResponse()
+    response = HttpResponse(status=200)
         # Content-type will be detected by nginx
-    del response['Content-Type']
-    response['X-Accel-Redirect'] = '/protected/' + path
+    response['Content-Type'] = ''
+    response['X-Accel-Redirect'] = '/protected/' + request.path
+    
     return response

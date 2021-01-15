@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf import settings
-from django.urls import path
+from django.urls import path, re_path
 from django.conf.urls.static import static
 from home.views import home, get_file, simple_upload, delete_file, multiple_upload, media_access
 from django.conf.urls import include, url
@@ -30,5 +30,5 @@ urlpatterns = [
     path('delete/', delete_file),
     path('accounts/', include('django.contrib.auth.urls')),
 
-    url(r'^media/(?P<path>.*)', media_access, name='media'),
+    re_path(r'^media/(?P<path>.*)', media_access, name='media'),
 ]
